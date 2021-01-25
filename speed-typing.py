@@ -18,36 +18,37 @@ class Game:
         self.results = "Time:0 Accuracy:0 %wpm:0 "
         self.wpm = 0
         self.end = False
-        self.HEAD_C = (201, 42, 255)
-        self.TEXT_C = (201, 42, 255)
-        self.RESULT_C = (201, 42, 255)
+        self.HEAD_C = (255, 61, 61)
+        self.TEXT_C = (255, 61, 61)
+        self.RESULT_C = (255, 61, 61)
 
 
         pygame.init()
-        self.open_img = pygame.image.load("background.jpg")
-        self.open_img = pygame.transform.scale(self.open_img, (self.w, self.h))
+        #self.open_img = pygame.image.load("type-speed-open.png")
+        #self.open_img = pygame.transform.scale(self.open_img, (self.w, self.h))
         
         
         self.bg = pygame.image.load("background.jpg")
         self.bg = pygame.transform.scale(self.bg, (self.w, self.h))
 
         self.screen = pygame.display.set_mode((self.w, self.h))
-        pygame.display.set_caption("Type Speed test!")
+        pygame.display.set_caption("Typing Speed test")
 
         #applying text to the screen
     def draw_text(self, screen, msg, y, fsize, color):
-        font = pygame.font.Font(None, fsize)
+        font = pygame.font.Font("myfont.ttf", fsize)
         text = font.render(msg, 1, color)
         text_rect = text.get_rect(center = (self.w / 2, y))
         screen.blit(text, text_rect)
         pygame.display.update()
-        
+
         #getting random sentences pulled from text file
     def get_sentence(self):
         f = open("sentences.txt", "r").read()
         sentences = f.split("\n")
         sentence = random.choice(sentences)
-        print(sentence)
+        #self.draw_text(self.screen, sentence, (self.h - 301), 35, (19, 16, 16))
+        self.draw_text(self.screen, sentence, (self.h - 299), 30, self.TEXT_C)
         return sentence
 
         #showing results/score
@@ -70,15 +71,15 @@ class Game:
             #calculate words per minute
             self.wpm = len(self.input_text) * 60 / (5 * self.total_time)
             self.end = True
-            print(self.total_time)
+            #print(self.total_time)
 
-            self.results = "Time: " + str(self.total_time) + "secs Accruacy: " + str(round(self.accuracy)) + "%" + " Wpm: " + str(round(self.wpm))
+            self.results = "Time: " + str(self.total_time) + " secs    Accruacy: " + str(round(self.accuracy)) + "%" + "    Wpm: " + str(round(self.wpm))
 
             #draw icon image
             self.time_img = pygame.image.load("icon.png")
-            self.time_img = pygame.transform.scale(self.time_img, (150,150))
-            screen.blit(self.time_img, (self.w/2-75, self.h-140))
-            self.draw_text(self.screen,"Reset", (self.h - 70), 26, (201, 42, 255))
+            self.time_img = pygame.transform.scale(self.time_img, (75,75))
+            screen.blit(self.time_img, (self.w/2 - 38, self.h-105))
+            self.draw_text(self.screen,"Reset", (self.h - 70), 20, (255, 61, 61))
 
             print(self.results)
             pygame.display.update()
@@ -90,9 +91,9 @@ class Game:
         self.running = True
         while(self.running):
             Clock = pygame.time.Clock()
-            self.screen.fill((255, 42, 42), (50,250,650,50))
+            self.screen.fill((198, 96, 48), (50,250,650,50))
             pygame.draw.rect(self.screen, self.HEAD_C, (50,250,650,50), 2)
-                                  
+                        
             #updating the test of the user input
             self.draw_text(self.screen, self.input_text, 274, 26,(250,250,250))
             pygame.display.update()
@@ -120,8 +121,8 @@ class Game:
                         if event.key == pygame.K_RETURN:
                             print(self.input_text)
                             self.show_results(self.screen)
-                            print(self.results)
-                            self.draw_text(self.screen, self.results, 350, 28, self.RESULT_C)
+                            #print(self.results)
+                            self.draw_text(self.screen, self.results, 350, 23, self.RESULT_C)
                             self.end = True
                         elif event.key == pygame.K_BACKSPACE:
                             self.input_text = self.input_text[:-1]
@@ -136,13 +137,16 @@ class Game:
 
 
     def reset_game(self):
-        self.screen.blit(self.open_img, (0,0))
-
+        self.screen.blit(self.bg, (0,0))
+        msg = "Typing Speed Test"
+        self.draw_text(self.screen, msg, 45, 80, (19, 16, 16))
+        self.draw_text(self.screen, msg, 50, 80, self.HEAD_C)
         pygame.display.update()
         time.sleep(1)
 
         self.reset = False
         self.end = False
+        self.active = False
 
         self.input_text = ""
         self.word = ""
@@ -150,27 +154,27 @@ class Game:
         self.wpm = 0
         
 
-        #getting random sentence when resetting the game
         self.word = self.get_sentence()
-        pygame.display.update()
         if (not self.word): 
+            
             self.reset_game()
 
-            #applying heading to the screen
-            self.screen.fill((0, 0, 0))
-            self.screen.blit(self.bg, (0,0))
-            msg = "Typing Speed Test!"
-            self.draw_text(self.screen, msg, 80, 80, self.HEAD_C)
+            # #applying heading to the screen
+            # self.screen.fill((0, 0, 0))
+            # self.screen.blit(self.bg, (0,0))
+            # pygame.display.update()
+            # msg = "Typing Speed Test!"
+            # self.draw_text(self.screen, msg, 80, 80, self.HEAD_C)
 
-            #applying the rectangle for the input box
-            pygame.draw.rect(self.screen, (255, 42, 42), (50,250,650,50), 2)
+            # #applying the rectangle for the input box
+            # pygame.draw.rect(self.screen, (255, 42, 42), (50,250,650,50), 2)
 
 
-            #applying the sentence 
-            self.draw_text(self.screen, self.word, 200, 28, self.TEXT_C)
-            pygame.display.update()
+            # #applying the sentence 
+            # self.draw_text(self.screen, self.get_sentence(), (self.h - 300), 26, (201, 42, 255))
+            # print(self.get_sentence)
+            # pygame.display.update()
             
-
 
 
 
