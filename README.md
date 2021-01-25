@@ -1,4 +1,4 @@
-### Python First project: Typing Speed Test
+# Python First project: Typing Speed Test
 
 
 # Python 3 was used to create the project while also using the imported library of Pygame.
